@@ -5,16 +5,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Czym jest to repozytorium
 
 Zadanie rekrutacyjne (Frontend Developer, junior/mid, budżet 3 godziny): saper w React + TypeScript,
-którego plansze są wczytywane z `saper-plansze.json`, a nie losowane. Pełna treść zadania jest w PDF-ie z maila
+którego plansze są wczytywane z `src/data/levels.json` (oryginał `saper-plansze.json` z zadania), a nie losowane. Pełna treść zadania jest w PDF-ie z maila
 rekrutacyjnego, który celowo nie trafił do repozytorium. Kluczowe
 wymagania są streszczone niżej, bo są oceniane, a rekruter uruchamia własny zestaw testów na
 `src/logic/board.ts`.
 
-W momencie pisania tego pliku repozytorium zawiera tylko JSON z planszami. Nie ma jeszcze szkieletu projektu.
-PDF sugeruje `npm create vite@latest -- --template react-ts` plus `npm i -D sass`; bundler i runner
-testów są dowolne. Po postawieniu projektu standardowe komendy to `npm install`, `npm run dev`,
-`npm run build` (musi przechodzić na czystym klonie) oraz skonfigurowany skrypt testów (Vitest naturalnie
-pasuje do Vite). Zaktualizuj tę sekcję, gdy szkielet powstanie.
+## Komendy
+
+```bash
+npm install
+npm run dev        # Vite na http://localhost:3000 (strictPort)
+npm run build      # tsc -b && vite build; musi przechodzić na czystym klonie
+npm test           # vitest run (wszystkie testy)
+npx vitest run src/logic/board.test.ts   # pojedynczy plik testów
+npx vitest run -t "cascade"              # testy pasujące do nazwy
+npm run lint       # oxlint
+```
+
+## Struktura
+
+- `src/logic/board.ts` — narzucony kontrakt (typy + `createBoard`, `revealCell`, `toggleFlag`). Eksportuje
+  dokładnie to i nic więcej. `grid.ts` trzyma wspólne helpery sąsiedztwa, `chord.ts` implementuje chording
+  składając wywołania `revealCell`. Wszystko czyste, niemutujące, testowane w `*.test.ts` obok.
+- `src/data/levels.json` + `levels.ts` — plansze; `levels.ts` tylko konwertuje `number[][]` na krotki.
+- `src/hooks/useGame.ts` — cały stan gry (poziom + plansza) i mapowanie kliknięć na logikę: klik w pole
+  odkryte to chording, w zakryte to odkrycie.
+- `src/components/` — `LevelSelect`, `Board`, `Cell`; `App.tsx` składa nagłówek, licznik i status.
+- `src/styles/variables.scss` — jedyne miejsce z wartościami kolorów, odstępów i rozmiarów (CSS custom
+  properties). Pozostałe SCSS (globalny i per komponent, BEM) używają wyłącznie `var(--…)`.
 
 ## Sposób pracy (wymagania Marcina)
 
@@ -69,7 +87,7 @@ Reguły, które funkcje muszą realizować:
 Funkcje powinny zwracać nowe obiekty `Board`, a nie mutować wejścia (UI opiera się na niemutowalnych
 aktualizacjach, a testy rekrutera mogą porównywać plansze przed i po).
 
-## Pułapki w danych `saper-plansze.json`
+## Pułapki w danych `src/data/levels.json`
 
 Plik jest celowo popsuty. Gra nie może się wywalić na żadnym poziomie, a README musi opisać każdy problem
 i sposób obsługi. Znalezione problemy:

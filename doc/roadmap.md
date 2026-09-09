@@ -1,9 +1,9 @@
 # Roadmapa implementacji — Saper (zadanie rekrutacyjne)
 
 Budżet: 3 h. Zasady: TDD, bez overengineeringu, twardo według PDF. Każdy etap kończy się osobnym
-commitem w konwencji Conventional Commits. Szacunki czasu są orientacyjne i służą pilnowaniu budżetu.
+commitem w konwencji Conventional Commits.
 
-## Etap 0 — Szkielet projektu (~15 min)
+## Etap 0 — Szkielet projektu
 
 1. `git init`, `.gitignore` (node_modules, dist).
 2. `npm create vite@latest . -- --template react-ts`, `npm i -D sass vitest`.
@@ -14,7 +14,7 @@ commitem w konwencji Conventional Commits. Szacunki czasu są orientacyjne i sł
 
 Commit: `chore: scaffold vite react-ts project with sass and vitest`
 
-## Etap 1 — Logika `src/logic/board.ts` (TDD, ~60 min)
+## Etap 1 — Logika `src/logic/board.ts` (TDD)
 
 Plik eksportuje **dokładnie** typy `Level`, `Cell`, `Board` i funkcje `createBoard`, `revealCell`,
 `toggleFlag`. Nic więcej. Funkcje czyste, zwracają nowe obiekty. Testy w `src/logic/board.test.ts`.
@@ -73,7 +73,7 @@ Miejsce implementacji: patrz decyzja D2 niżej. Testy:
 
 Commit: `feat(logic): chording on numbered cells`
 
-## Etap 2 — Interfejs (~50 min)
+## Etap 2 — Interfejs
 
 Bez bibliotek poza Reactem. Stan gry w jednym hooku `useGame` (useState + funkcje z logiki).
 Komponenty tylko te, które są potrzebne:
@@ -95,7 +95,7 @@ Commity:
 - `feat(ui): reveal, flag and chord interactions`
 - `feat(ui): mine counter, game status and restart`
 
-## Etap 3 — Style SCSS (~20 min)
+## Etap 3 — Style SCSS
 
 - `src/styles/variables.scss` — jedyny plik z wartościami: kolory tła, pól, flag, min, cyfr 1–8,
   odstępy, rozmiar pola. Wszystko jako CSS custom properties na `:root`.
@@ -105,7 +105,7 @@ Commity:
 
 Commit: `style: scss with bem classes and css variables`
 
-## Etap 4 — README i kontrola końcowa (~25 min)
+## Etap 4 — README i kontrola końcowa
 
 README.md po polsku, siedem punktów z PDF (kilka zdań każdy). Punkt 3 opisuje każdy z pięciu
 problemów w danych i przyjętą politykę. Punkt 7 opisuje użycie AI.
@@ -143,8 +143,6 @@ kaskaduje całość i plansza od razu jest `won`. Bez sztucznego stanu pośredni
 **D4. `ciasno` — plansza bez pól do odkrycia.** DECYZJA: `createBoard` zwraca `idle`, nie `won`. Warunek wygranej
 sprawdzamy tylko po ruchu odkrycia, nigdy przy tworzeniu.
 
-**D5. Rozmiary zbliżone do budżetu.** Jeśli po Etapie 2 zostanie mniej niż 30 min, Etap 3 ograniczyć
-do minimum (zmienne + BEM bez dopieszczania), a czas oddać README.
 
 **D6. Zawartość repozytorium.** DECYZJA: `CLAUDE.md` i `doc/roadmap.md` są w repo,
 PDF z treścią zadania nie. Commity zawierają trailer Co-Authored-By Claude i link do sesji. Użycie AI opisane w README pkt 7.

@@ -182,6 +182,27 @@ describe('revealCell', () => {
     expect(revealCell(lost, 4)).toBe(lost)
   })
 
+  it('keeps mines in place when the first reveal is already safe', () => {
+    const before = createBoard(level())
+    const after = revealCell(before, 4)
+
+    expect(mineIndices(after.cells)).toEqual(mineIndices(before.cells))
+  })
+
+  it('ignores a second reveal of the same cell', () => {
+    const once = revealCell(createBoard(level()), 1)
+
+    expect(revealCell(once, 1)).toBe(once)
+  })
+
+  it('ignores an index outside the board', () => {
+    const board = createBoard(level())
+
+    expect(revealCell(board, 9)).toBe(board)
+    expect(revealCell(board, -1)).toBe(board)
+    expect(toggleFlag(board, 9)).toBe(board)
+  })
+
   it('does not mutate the input board', () => {
     const board = createBoard(level())
     revealCell(board, 1)
@@ -241,6 +262,29 @@ describe('revealCell cascade and win', () => {
   it('wins on a full cascade even from idle', () => {
     const board = revealCell(createBoard(cascadeLevel), 0)
 
+    expect(board.state).toBe('won')
+  })
+
+  it('ignores reveal and flag after a win', () => {
+    const won = revealCell(createBoard(level({ mineCount: 0, mines: [] })), 4)
+    expect(won.state).toBe('won')
+
+    expect(revealCell(won, 0)).toBe(won)
+    expect(toggleFlag(won, 0)).toBe(won)
+  })
+
+  it('cascades from the first reveal after relocating the mine', () => {
+    // Mine at [2, 2] moves to index 0 when index 8 is revealed first;
+    // index 8 then has no adjacent mines, so the cascade must use the new layout.
+    const board = revealCell(createBoard(level({ mines: [[2, 2]] })), 8)
+
+    expect(mineIndices(board.cells)).toEqual([0])
+    expect(board.cells[8].adjacent).toBe(0)
+    expect(board.cells.map((cell) => cell.revealed)).toEqual([
+      false, true, true,
+      true, true, true,
+      true, true, true,
+    ])
     expect(board.state).toBe('won')
   })
 })

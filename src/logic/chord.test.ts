@@ -72,5 +72,9 @@ describe('chordCell', () => {
     const board = chordCell(playing, 1)
 
     expect(board.state).toBe('won')
+    expect(board.cells.map((cell) => cell.revealed)).toEqual([
+      false, true, true, true,
+      true, true, true, true,
+    ])
   })
 })

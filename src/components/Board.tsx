@@ -1,5 +1,6 @@
 import type { Board as BoardData } from '../logic/board'
 import { Cell } from './Cell'
+import './Board.scss'
 
 type Props = {
   board: BoardData

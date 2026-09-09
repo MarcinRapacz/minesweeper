@@ -1,0 +1,45 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-size-title);
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  &__restart {
+    padding: var(--space-xs) var(--space-md);
+    font: inherit;
+    color: var(--color-accent-text);
+    background: var(--color-accent);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  &__status {
+    display: flex;
+    gap: var(--space-lg);
+  }
+
+  &__result {
+    font-weight: var(--font-weight-bold);
+
+    &--won {
+      color: var(--color-won);
+    }
+
+    &--lost {
+      color: var(--color-lost);
+    }
+  }
+}

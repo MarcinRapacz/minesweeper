@@ -1,4 +1,5 @@
 import type { Level } from '../logic/board'
+import './LevelSelect.scss'
 
 type Props = {
   levels: Level[]

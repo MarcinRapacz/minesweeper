@@ -1,0 +1,53 @@
+.board {
+  display: grid;
+  grid-auto-rows: var(--cell-size);
+  gap: var(--cell-gap);
+  padding: var(--cell-gap);
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  &__cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    padding: 0;
+    font-size: var(--font-size-cell);
+    font-weight: var(--font-weight-bold);
+    line-height: 1;
+    color: var(--color-text);
+    background: var(--color-cell-hidden);
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background: var(--color-cell-hidden-hover);
+    }
+
+    &--revealed,
+    &--revealed:hover {
+      background: var(--color-cell-revealed);
+      cursor: default;
+    }
+
+    &--flagged {
+      color: var(--color-flag);
+    }
+
+    &--mine,
+    &--mine:hover {
+      color: var(--color-cell-mine-text);
+      background: var(--color-cell-mine);
+    }
+
+    @for $digit from 1 through 8 {
+      &--adjacent-#{$digit} {
+        color: var(--color-digit-#{$digit});
+      }
+    }
+  }
+}

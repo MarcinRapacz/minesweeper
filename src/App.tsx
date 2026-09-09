@@ -2,6 +2,7 @@ import { Board } from './components/Board'
 import { LevelSelect } from './components/LevelSelect'
 import { levels } from './data/levels'
 import { useGame } from './hooks/useGame'
+import './App.scss'
 
 const statusText = {
   idle: 'Odkryj pierwsze pole',

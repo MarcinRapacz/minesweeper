@@ -1,0 +1,48 @@
+// The only place in the project where colours, spacing and sizes are defined.
+:root {
+  // Palette
+  --color-bg: #f3f4f6;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-surface: #ffffff;
+  --color-border: #9ca3af;
+  --color-accent: #2563eb;
+  --color-accent-text: #ffffff;
+
+  --color-cell-hidden: #cbd5e1;
+  --color-cell-hidden-hover: #b6c2d1;
+  --color-cell-revealed: #e5e7eb;
+  --color-cell-mine: #dc2626;
+  --color-cell-mine-text: #ffffff;
+  --color-flag: #b91c1c;
+
+  --color-won: #15803d;
+  --color-lost: #b91c1c;
+
+  --color-digit-1: #1d4ed8;
+  --color-digit-2: #15803d;
+  --color-digit-3: #dc2626;
+  --color-digit-4: #1e3a8a;
+  --color-digit-5: #7f1d1d;
+  --color-digit-6: #0f766e;
+  --color-digit-7: #111827;
+  --color-digit-8: #4b5563;
+
+  // Spacing
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+
+  // Sizes
+  --cell-size: 2rem;
+  --cell-gap: 0.125rem;
+  --border-width: 0.0625rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+
+  --font-size-base: 1rem;
+  --font-size-title: 1.75rem;
+  --font-size-cell: 1.125rem;
+  --font-weight-bold: 700;
+}

@@ -121,5 +121,25 @@ export function revealCell(board: Board, index: number): Board {
     return { ...board, cells: replaceCell(cells, index, { revealed: true }), state: 'lost' }
   }
 
-  return { ...board, cells: replaceCell(cells, index, { revealed: true }), state: 'playing' }
+  const revealed = cascade(cells, index, board.width, board.height)
+  const won = revealed.every((c) => c.mine || c.revealed)
+  return { ...board, cells: revealed, state: won ? 'won' : 'playing' }
+}
+
+// Reveals the cell and, for cells with no adjacent mines, floods into hidden,
+// unflagged neighbours. Iterative to keep large boards off the call stack.
+function cascade(cells: Cell[], start: number, width: number, height: number): Cell[] {
+  const next = cells.map((cell) => ({ ...cell }))
+  const stack = [start]
+  while (stack.length > 0) {
+    const index = stack.pop()
+    if (index === undefined) break
+    const cell = next[index]
+    if (cell.revealed || cell.flagged) continue
+    cell.revealed = true
+    if (cell.adjacent === 0) {
+      stack.push(...neighboursOf(index, width, height))
+    }
+  }
+  return next
 }

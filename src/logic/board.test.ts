@@ -98,15 +98,15 @@ describe('toggleFlag', () => {
   })
 
   it('does not flag a revealed cell', () => {
-    const board = revealCell(createBoard(level()), 8)
-    expect(board.cells[8].revealed).toBe(true)
+    const board = revealCell(createBoard(level()), 1)
+    expect(board.cells[1].revealed).toBe(true)
 
-    const result = toggleFlag(board, 8)
-    expect(result.cells[8].flagged).toBe(false)
+    const result = toggleFlag(board, 1)
+    expect(result.cells[1].flagged).toBe(false)
   })
 
   it('ignores moves on a finished board', () => {
-    const lost = revealCell(revealCell(createBoard(level()), 8), 0)
+    const lost = revealCell(revealCell(createBoard(level()), 1), 0)
     expect(lost.state).toBe('lost')
 
     expect(toggleFlag(lost, 4)).toBe(lost)
@@ -160,7 +160,7 @@ describe('revealCell', () => {
   })
 
   it('loses when a mine is revealed while playing', () => {
-    const playing = revealCell(createBoard(level()), 8)
+    const playing = revealCell(createBoard(level()), 1)
     const board = revealCell(playing, 0)
 
     expect(board.state).toBe('lost')
@@ -188,5 +188,59 @@ describe('revealCell', () => {
 
     expect(board.cells[1].revealed).toBe(false)
     expect(board.state).toBe('idle')
+  })
+})
+
+describe('revealCell cascade and win', () => {
+  // 4x3, mine at [3, 0]:
+  // 0 0 1 *
+  // 0 0 1 1
+  // 0 0 0 0
+  const cascadeLevel = level({ width: 4, height: 3, mines: [[3, 0]] })
+
+  it('reveals neighbours recursively from an empty cell and stops at numbers', () => {
+    const board = revealCell(createBoard(cascadeLevel), 0)
+
+    const revealed = board.cells.map((cell) => cell.revealed)
+    expect(revealed).toEqual([
+      true, true, true, false,
+      true, true, true, true,
+      true, true, true, true,
+    ])
+  })
+
+  it('does not reveal flagged cells during a cascade', () => {
+    const flagged = toggleFlag(createBoard(cascadeLevel), 5)
+    const board = revealCell(flagged, 0)
+
+    expect(board.cells[5].revealed).toBe(false)
+    expect(board.cells[5].flagged).toBe(true)
+    expect(board.cells[9].revealed).toBe(true) // cascade flows around the flag
+  })
+
+  it('wins when the last safe cell is revealed', () => {
+    // 2x1: `* .`
+    const board = revealCell(createBoard(level({ width: 2, height: 1, mines: [[0, 0]] })), 1)
+
+    expect(board.state).toBe('won')
+  })
+
+  it('does not win while safe cells remain hidden', () => {
+    const board = revealCell(createBoard(level()), 1)
+
+    expect(board.state).toBe('playing')
+  })
+
+  it('wins immediately on a board without mines', () => {
+    const board = revealCell(createBoard(level({ mineCount: 0, mines: [] })), 4)
+
+    expect(board.state).toBe('won')
+    expect(board.cells.every((cell) => cell.revealed)).toBe(true)
+  })
+
+  it('wins on a full cascade even from idle', () => {
+    const board = revealCell(createBoard(cascadeLevel), 0)
+
+    expect(board.state).toBe('won')
   })
 })

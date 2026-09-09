@@ -38,6 +38,9 @@ w jednym pliku, testy logiki.
   ale odkrywanie i flagowanie klawiaturą to rozszerzenie zakresu.
 - **Po przegranej nie wyróżniam źle postawionych flag.** Zadanie wymaga pokazania min i to robię.
 - **Zwykły SCSS zamiast CSS Modules.** Klasy BEM są globalne i unikalne, moduły nic by tu nie dały.
+- **Brak obsługi błędów w czasie działania.** Dwa `throw` przy starcie (brak elementu `#root`, pusta lista
+  poziomów) to jedyne miejsca, gdzie coś może pójść nie tak, i oba oznaczają zepsuty build, a nie stan gry.
+  Logika jest czysta i nie rzuca wyjątków, więc `try/catch` nie ma czego łapać.
 
 ## 3. Co znalazłem w danych i jak to obsłużyłem
 
@@ -69,7 +72,8 @@ pola z cyfrą, co jest dobrą lekcją, że testy powinny wybierać pola świadom
 
 ## 5. Jakich bibliotek użyłem i po co
 
-- **react, react-dom** — wymagane przez zadanie, renderowanie interfejsu.
+- **react** — wymagany przez zadanie, komponenty i stan interfejsu.
+- **react-dom** — montuje drzewo React w DOM; pola planszy są zwykłymi elementami `button`.
 - **vite** — bundler i serwer deweloperski, sugerowany w zadaniu, zero konfiguracji dla React + TS.
 - **typescript** — wymagany, tryb `strict`. Flaga `erasableSyntaxOnly` dodatkowo blokuje `enum`.
 - **sass** — wymagany przez zadanie do SCSS.

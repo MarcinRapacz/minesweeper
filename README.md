@@ -101,3 +101,9 @@ Gotowy kod przeszedł code review na osobnym agencie AI, a niezależnie od niego
 Z obu wyszły ostatnie poprawki: dodatkowe testy brzegowe logiki (ruchy po wygranej, kaskada po relokacji
 miny, indeksy poza planszą), podniesienie kontrastu cyfr 2, 3 i 6 do poziomu WCAG AA oraz drobne zmiany
 w README. Żadna z tych poprawek nie zmieniła zachowania gry.
+
+Kontrolę nad procesem trzymałem w trzech miejscach: roadmapa z decyzjami projektowymi powstała przed kodem
+i jest w repozytorium, asystent pracował pod regułami z `CLAUDE.md` (TDD, zakaz rozszerzania zakresu,
+obowiązek zgłoszenia wątpliwości przed implementacją), a każdy etap kończył się osobnym commitem, który
+przeglądałem. Z tych przeglądów wyszły konkretne poprawki, w tym brakujące testy brzegowe i jeden test
+dopisany już po implementacji, co jest zaznaczone w opisie commita.

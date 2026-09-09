@@ -73,3 +73,19 @@ export function createBoard(level: Level): Board {
     state: 'idle',
   }
 }
+
+function isFinished(board: Board): boolean {
+  return board.state === 'won' || board.state === 'lost'
+}
+
+function replaceCell(cells: Cell[], index: number, patch: Partial<Cell>): Cell[] {
+  return cells.map((cell, i) => (i === index ? { ...cell, ...patch } : cell))
+}
+
+export function toggleFlag(board: Board, index: number): Board {
+  const cell = board.cells[index]
+  if (isFinished(board) || cell === undefined || cell.revealed) {
+    return board
+  }
+  return { ...board, cells: replaceCell(board.cells, index, { flagged: !cell.flagged }) }
+}

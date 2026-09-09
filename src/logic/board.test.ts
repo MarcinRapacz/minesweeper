@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createBoard, type Level } from './board'
+import { createBoard, toggleFlag, type Level } from './board'
 
 const level = (overrides: Partial<Level> = {}): Level => ({
   id: 'test',
@@ -83,5 +83,26 @@ describe('createBoard', () => {
 
     expect(mineIndices(board.cells)).toHaveLength(9)
     expect(board.state).toBe('idle')
+  })
+})
+
+describe('toggleFlag', () => {
+  it('flags a hidden cell and unflags it on the second call', () => {
+    const board = createBoard(level())
+
+    const flagged = toggleFlag(board, 4)
+    expect(flagged.cells[4].flagged).toBe(true)
+
+    const unflagged = toggleFlag(flagged, 4)
+    expect(unflagged.cells[4].flagged).toBe(false)
+  })
+
+  it('does not mutate the input board', () => {
+    const board = createBoard(level())
+    const result = toggleFlag(board, 4)
+
+    expect(board.cells[4].flagged).toBe(false)
+    expect(result).not.toBe(board)
+    expect(result.cells).not.toBe(board.cells)
   })
 })

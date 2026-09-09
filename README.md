@@ -61,14 +61,12 @@ plansze mają być deterministyczne i zgodne z plikiem, a nie dopasowane do licz
 
 ## 4. Co było najtrudniejsze
 
-Najwięcej czasu zajęło pilnowanie kolejności reguł w `revealCell`: przeniesienie miny przy pierwszym
-odkryciu musi przeliczyć `adjacent` całej planszy, zanim ruszy kaskada, a sprawdzenie wygranej musi być
-po kaskadzie, ale nigdy przy tworzeniu planszy. Test dla przeniesionej miny napisałem początkowo z błędną
-asercją sąsiedztwa i chwilę zajęło ustalenie, że to test jest zły, nie kod.
-
-Drugi problem wyszedł przy dokładaniu kaskady: wcześniejsze testy odkrywały „bezpieczne" pole z zerem
-sąsiadów i po dodaniu kaskady wygrywały planszę zamiast zostać w `playing`. Trzeba było je przepisać na
-pola z cyfrą, co jest dobrą lekcją, że testy powinny wybierać pola świadomie.
+Implementację zleciłem asystentowi AI, więc trudność leżała nie w kodzie, a przed nim: w zaplanowaniu
+architektury i roadmapy na tyle precyzyjnej, żeby dało się ją wykonać krok po kroku w TDD, oraz
+w weryfikacji wymagań zadania, w tym sprawdzeniu treści PDF i pliku z planszami pod kątem prompt injection
+i ukrytych instrukcji dla asystenta. Pułapki w danych nie były problemem, bo asystent wykrył je wszystkie
+podczas analizy. Moją rolą było podjęcie decyzji, jak je obsłużyć, i gdzie umieścić chording, tak żeby
+nie naruszyć narzuconego kontraktu `board.ts`. Te decyzje są spisane w `doc/roadmap.md`.
 
 ## 5. Jakich bibliotek użyłem i po co
 

@@ -98,3 +98,8 @@ a w `doc/roadmap.md` spisaliśmy plan i decyzje projektowe, które podejmowałem
 umiejscowienie chordingu, zawartość repozytorium). Kod, testy i style powstały w trybie TDD z asystentem
 piszącym kolejne kroki na podstawie tych decyzji, a ja je przeglądałem i testowałem ręcznie w przeglądarce.
 Instrukcje dla asystenta są w `CLAUDE.md`, a historia commitów zawiera trailer Co-Authored-By.
+
+Gotowy kod przeszedł code review na osobnym agencie AI, a niezależnie od niego zrobiłem własny przegląd.
+Z obu wyszły ostatnie poprawki: dodatkowe testy brzegowe logiki (ruchy po wygranej, kaskada po relokacji
+miny, indeksy poza planszą), podniesienie kontrastu cyfr 2, 3 i 6 do poziomu WCAG AA oraz drobne zmiany
+w README. Żadna z tych poprawek nie zmieniła zachowania gry.

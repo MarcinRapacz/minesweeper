@@ -5,7 +5,7 @@ Logika gry jest w czystych funkcjach w `src/logic/board.ts`, bez zależności od
 
 ## 1. Jak uruchomić
 
-Wymagany Node 20+ (sprawdzone na Node 24).
+Wymagany Node 24 (pisane i sprawdzane na v24.16.0; Vite 8 nie wystartuje na Node starszym niż 20.19).
 
 ```bash
 npm install

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { createBoard, toggleFlag, type Level } from './board'
+import { createBoard, revealCell, toggleFlag, type Level } from './board'
 
 const level = (overrides: Partial<Level> = {}): Level => ({
   id: 'test',
@@ -97,6 +97,21 @@ describe('toggleFlag', () => {
     expect(unflagged.cells[4].flagged).toBe(false)
   })
 
+  it('does not flag a revealed cell', () => {
+    const board = revealCell(createBoard(level()), 8)
+    expect(board.cells[8].revealed).toBe(true)
+
+    const result = toggleFlag(board, 8)
+    expect(result.cells[8].flagged).toBe(false)
+  })
+
+  it('ignores moves on a finished board', () => {
+    const lost = revealCell(revealCell(createBoard(level()), 8), 0)
+    expect(lost.state).toBe('lost')
+
+    expect(toggleFlag(lost, 4)).toBe(lost)
+  })
+
   it('does not mutate the input board', () => {
     const board = createBoard(level())
     const result = toggleFlag(board, 4)
@@ -104,5 +119,74 @@ describe('toggleFlag', () => {
     expect(board.cells[4].flagged).toBe(false)
     expect(result).not.toBe(board)
     expect(result.cells).not.toBe(board.cells)
+  })
+})
+
+describe('revealCell', () => {
+  // Layout used below (3x3, mine at [0, 0]):
+  // * 1 0
+  // 1 1 0
+  // 0 0 0
+
+  it('reveals a safe cell and moves from idle to playing', () => {
+    const board = revealCell(createBoard(level()), 1)
+
+    expect(board.state).toBe('playing')
+    expect(board.cells[1].revealed).toBe(true)
+  })
+
+  it('moves a mine hit on the first reveal to the lowest free index', () => {
+    const board = revealCell(createBoard(level({ mines: [[0, 0], [1, 0]] })), 0)
+
+    expect(board.state).toBe('playing')
+    expect(board.cells[0].mine).toBe(false)
+    expect(board.cells[0].revealed).toBe(true)
+    expect(board.cells[1].mine).toBe(true)
+    expect(board.cells[2].mine).toBe(true) // lowest index without a mine that is not the revealed cell
+    expect(board.cells[0].adjacent).toBe(1)
+    expect(board.cells[3].adjacent).toBe(1)
+    expect(board.cells[5].adjacent).toBe(2) // neighbours both mines at [1, 0] and [2, 0]
+  })
+
+  it('loses on the first reveal when there is no free cell to move the mine to', () => {
+    const full = level({
+      mines: [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [2, 2]],
+    })
+    const board = revealCell(createBoard(full), 4)
+
+    expect(board.state).toBe('lost')
+    expect(board.cells[4].mine).toBe(true)
+    expect(board.cells[4].revealed).toBe(true)
+  })
+
+  it('loses when a mine is revealed while playing', () => {
+    const playing = revealCell(createBoard(level()), 8)
+    const board = revealCell(playing, 0)
+
+    expect(board.state).toBe('lost')
+    expect(board.cells[0].revealed).toBe(true)
+  })
+
+  it('does not reveal a flagged cell', () => {
+    const flagged = toggleFlag(createBoard(level()), 1)
+    const board = revealCell(flagged, 1)
+
+    expect(board.cells[1].revealed).toBe(false)
+    expect(board.state).toBe('idle')
+  })
+
+  it('ignores moves on a finished board', () => {
+    const lost = revealCell(revealCell(createBoard(level()), 1), 0)
+    expect(lost.state).toBe('lost')
+
+    expect(revealCell(lost, 4)).toBe(lost)
+  })
+
+  it('does not mutate the input board', () => {
+    const board = createBoard(level())
+    revealCell(board, 1)
+
+    expect(board.cells[1].revealed).toBe(false)
+    expect(board.state).toBe('idle')
   })
 })

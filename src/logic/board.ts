@@ -89,3 +89,37 @@ export function toggleFlag(board: Board, index: number): Board {
   }
   return { ...board, cells: replaceCell(board.cells, index, { flagged: !cell.flagged }) }
 }
+
+function moveMineToLowestFreeCell(cells: Cell[], from: number): Cell[] | null {
+  const target = cells.findIndex((cell, index) => !cell.mine && index !== from)
+  if (target === -1) {
+    return null
+  }
+  return cells.map((cell, index) => {
+    if (index === from) return { ...cell, mine: false }
+    if (index === target) return { ...cell, mine: true }
+    return cell
+  })
+}
+
+export function revealCell(board: Board, index: number): Board {
+  const cell = board.cells[index]
+  if (isFinished(board) || cell === undefined || cell.revealed || cell.flagged) {
+    return board
+  }
+
+  let cells = board.cells
+  if (board.state === 'idle' && cell.mine) {
+    // First reveal is safe: relocate the mine if there is anywhere to put it.
+    const moved = moveMineToLowestFreeCell(cells, index)
+    if (moved !== null) {
+      cells = withAdjacent(moved, board.width, board.height)
+    }
+  }
+
+  if (cells[index].mine) {
+    return { ...board, cells: replaceCell(cells, index, { revealed: true }), state: 'lost' }
+  }
+
+  return { ...board, cells: replaceCell(cells, index, { revealed: true }), state: 'playing' }
+}
